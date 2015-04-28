@@ -9,16 +9,6 @@ HOME_URL="http://www.indiapost.gov.in/speednettracking.aspx"
 CAPTCHA_URL="http://www.indiapost.gov.in/captcha.aspx"
 ROOT_URL = "http://www.indiapost.gov.in/"
 
-from datetime import datetime
-import json
-
-class DateTimeEncoder(json.JSONEncoder):
-  def default(self, o):
-    if isinstance(o, datetime):
-      return o.isoformat()
-
-    return json.JSONEncoder.default(self, o)
-
 class Tracker:
   def __init__(self):
     self.POST_DATA = {}
@@ -42,10 +32,10 @@ class Tracker:
     captcha_file = tempfile.NamedTemporaryFile(delete=False)
 
     captcha_file.write(captcha_response.content)
-    print "Captcha saved at "+captcha_file.name
 
     captcha_file.close()
     self.POST_DATA['txtCaptcha'] = os.popen("python captcha.py "+captcha_file.name).read().strip()
+    os.remove(captcha_file.name)
 
   def track(self, id):
     details = {}
@@ -54,13 +44,17 @@ class Tracker:
     dom = BeautifulSoup(response.content)
 
     general_details = dom.find(id="GridView1").findAll('td')
+
+    if len(general_details) < 7:
+      return None
+
     details['id'] = dom.find(id='Label1').text.strip()
     details['origin'] = general_details[0].text.strip()
     details['booking_date'] = parser.parse(general_details[1].text.strip())
     details['pincode'] = general_details[2].text.strip()
     details['tariff'] = general_details[3].text.strip()
     details['category'] = general_details[4].text.strip()
-    details['delivery_time'] = general_details[5].text.strip()
+    details['destination'] = general_details[5].text.strip()
     details['delivery_date'] = general_details[6].text.strip()
     details['delivered'] = (details['delivery_date'] != 'Not Available')
 
