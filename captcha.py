@@ -1,7 +1,7 @@
 from PIL import Image
-import requests
 import glob
 import os
+import sys
 from compare import VectorCompare
 ###########################
 # Load the training set
@@ -23,17 +23,11 @@ for filename in glob.iglob('glyphs/**/*'):
   c = os.path.basename(os.path.dirname(filename))
   DICTIONARY[c].append(buildvector(Image.open(filename)))
 
-s = requests.Session()
 ##############################
 # Now we keep making requests to the captcha
 
-r = s.get('http://www.indiapost.gov.in/captcha.aspx')
-f = open("/tmp/captcha.gif", 'wb')
-f.write(r.content)
-f.close()
-
 # Now we break the captcha
-im = Image.open("/tmp/captcha.gif")
+im = Image.open(sys.argv[1])
 im = im.convert("P")
 im2 = Image.new("P",im.size,255)
 im = im.convert("P")
