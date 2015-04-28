@@ -2,6 +2,7 @@ from bottle import route, run, static_file, response, abort
 from tracker import Tracker
 from encoder import DateTimeEncoder    
 import json
+import sys
 
 @route('/')
 def index():
@@ -20,4 +21,4 @@ def track(id):
   else:
     abort(404, 'Consignment details not Found')
 
-run(host='localhost', port=8080)
+run(host='0.0.0.0', port=sys.argv[1])
