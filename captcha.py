@@ -1,7 +1,8 @@
-from PIL import Image
 import glob
 import os
 import sys
+
+from PIL import Image
 from compare import VectorCompare
 ###########################
 # Load the training set
@@ -27,63 +28,71 @@ for filename in glob.iglob('glyphs/**/*'):
 # Now we keep making requests to the captcha
 
 # Now we break the captcha
-im = Image.open(sys.argv[1])
-im = im.convert("P")
-im2 = Image.new("P",im.size,255)
-im = im.convert("P")
 
-temp = {}
+class Captcha(object):
+  def __init__(self, filename):
+    super(Captcha, self).__init__()
+    self.im = Image.open(filename)
+    self.im = self.im.convert("P")
+    self.im2 = Image.new("P",self.im.size,255)
+    self.im = self.im.convert("P")
+    self.clean_image()
+    self.extract_letters()
 
-for x in range(im.size[1]):
-  for y in range(im.size[0]):
-    pix = im.getpixel((y,x))
-    temp[pix] = pix
-    if pix <60: # these are the numbers to get
-      im2.putpixel((y,x),0)
+  def clean_image(self):
+    temp = {}
 
-inletter = False
-foundletter=False
-start = 0
-end = 0
+    for x in range(self.im.size[1]):
+      for y in range(self.im.size[0]):
+        pix = self.im.getpixel((y,x))
+        temp[pix] = pix
+        if pix <60: # these are the numbers to get
+          self.im2.putpixel((y,x),0)
 
-# im2 now has black captcha
-letters = []
+  def extract_letters(self):
+    inletter = False
+    foundletter=False
+    start = 0
+    end = 0
 
-for y in range(im2.size[0]): # slice across
-  for x in range(im2.size[1]): # slice down
-    pix = im2.getpixel((y,x))
-    if pix != 255:
-      inletter = True
-  if foundletter == False and inletter == True:
-    foundletter = True
-    start = y
+    # im2 now has black captcha
+    self.letters = []
 
-  if foundletter == True and inletter == False:
-    foundletter = False
-    end = y
-    letters.append((start,end))
+    for y in range(self.im2.size[0]): # slice across
+      for x in range(self.im2.size[1]): # slice down
+        pix = self.im2.getpixel((y,x))
+        if pix != 255:
+          inletter = True
+      if foundletter == False and inletter == True:
+        foundletter = True
+        start = y
 
-  inletter=False
+      if foundletter == True and inletter == False:
+        foundletter = False
+        end = y
+        self.letters.append((start,end))
 
-# letters now contains the cordinates
-# 
-v = VectorCompare()
-captcha = ""
+      inletter=False
 
-for index, letter in enumerate(letters):  
-  im3 = im2.crop(( letter[0] , 0, letter[1],im2.size[1] ))
-  buestguess = 0
-  solution = None
+  def crack(self):
+    # letters now contains the cordinates
+    v = VectorCompare()
+    captcha = ""
 
-  for character in DICTIONARY:
-    list = DICTIONARY[character]
+    for index, letter in enumerate(self.letters):  
+      im3 = self.im2.crop(( letter[0] , 0, letter[1],self.im2.size[1] ))
+      buestguess = 0
+      solution = None
 
-    for vector in list:
-      score = v.relation(vector, buildvector(im3))
+      for character in DICTIONARY:
+        list = DICTIONARY[character]
 
-      if score > buestguess:
-        solution = character
-        buestguess = score
-  captcha+=solution
+        for vector in list:
+          score = v.relation(vector, buildvector(im3))
 
-print captcha
+          if score > buestguess:
+            solution = character
+            buestguess = score
+      captcha+=solution
+
+    return captcha

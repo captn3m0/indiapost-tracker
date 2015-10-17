@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import tempfile
 import os
 from dateutil import parser
+from captcha import Captcha
 import json
 
 HOME_URL="http://www.indiapost.gov.in/speednettracking.aspx"
@@ -32,9 +33,11 @@ class Tracker:
     captcha_file = tempfile.NamedTemporaryFile(delete=False)
 
     captcha_file.write(captcha_response.content)
-
     captcha_file.close()
-    self.POST_DATA['txtCaptcha'] = os.popen("python captcha.py "+captcha_file.name).read().strip()
+
+    code = Captcha(captcha_file.name).crack()
+
+    self.POST_DATA['txtCaptcha'] = code
     os.remove(captcha_file.name)
 
   def track(self, id):
