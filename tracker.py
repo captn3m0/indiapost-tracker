@@ -1,6 +1,5 @@
 import json
-import os
-import tempfile
+from io import BytesIO
 
 import requests
 from bs4 import BeautifulSoup
@@ -34,15 +33,13 @@ class Tracker:
         self.captcha_url = dom.find(id="imgcap").attrs['src']
 
         captcha_response = self.session.get(ROOT_URL + self.captcha_url)
-        captcha_file = tempfile.NamedTemporaryFile(delete=False)
-
+        captcha_file = BytesIO()
         captcha_file.write(captcha_response.content)
-        captcha_file.close()
 
-        code = Captcha(captcha_file.name).crack()
+        code = Captcha(captcha_file).crack()
+        print(code)
 
         self.POST_DATA['txtCaptcha'] = code
-        os.remove(captcha_file.name)
 
     def track(self, id):
         details = {}

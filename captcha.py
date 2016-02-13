@@ -38,9 +38,9 @@ class Captcha(object):
         super(Captcha, self).__init__()
         self.letters = []
         self.im = Image.open(filename)
-        self.im = self.im.convert("P")
+        # self.im = self.im.convert("P")
         self.im2 = Image.new("P", self.im.size, 255)
-        self.im = self.im.convert("P")
+        # self.im = self.im.convert("P")
         self.clean_image()
         self.extract_letters()
 
