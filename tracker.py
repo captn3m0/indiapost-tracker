@@ -20,7 +20,7 @@ class Tracker:
         self.session = requests.Session()
         home_response = self.session.get(HOME_URL)
 
-        dom = BeautifulSoup(home_response.content)
+        dom = BeautifulSoup(home_response.content, "html.parser")
 
         inputs = dom.find_all('input')
 
@@ -37,7 +37,6 @@ class Tracker:
         captcha_file.write(captcha_response.content)
 
         code = Captcha(captcha_file).crack()
-        print(code)
 
         self.POST_DATA['txtCaptcha'] = code
 
@@ -45,7 +44,7 @@ class Tracker:
         details = {}
         self.POST_DATA['Txt_ArticleTrack'] = id
         response = self.session.post(HOME_URL, data=self.POST_DATA)
-        dom = BeautifulSoup(response.content)
+        dom = BeautifulSoup(response.content, "html.parser")
 
         general_details = dom.find(id="GridView1").findAll('td')
 

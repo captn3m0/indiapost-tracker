@@ -34,31 +34,28 @@ for filename in glob.iglob('glyphs/**/*'):
 # Now we break the captcha
 
 class Captcha(object):
-    def __init__(self, filename):
+    def __init__(self, mem_file):
         super(Captcha, self).__init__()
         self.letters = []
-        self.im = Image.open(filename)
-        # self.im = self.im.convert("P")
+        self.im = Image.open(mem_file)
         self.im2 = Image.new("P", self.im.size, 255)
-        # self.im = self.im.convert("P")
         self.clean_image()
         self.extract_letters()
 
     def clean_image(self):
         temp = {}
 
-        for x in range(self.im.size[1]):
-            for y in range(self.im.size[0]):
-                pix = self.im.getpixel((y, x))
+        for a in range(self.im.size[1]):
+            for b in range(self.im.size[0]):
+                pix = self.im.getpixel((b, a))
                 temp[pix] = pix
                 if pix < 60:  # these are the numbers to get
-                    self.im2.putpixel((y, x), 0)
+                    self.im2.putpixel((b, a), 0)
 
     def extract_letters(self):
         inletter = False
         foundletter = False
         start = 0
-        end = 0
 
         # im2 now has black captcha
 
@@ -67,11 +64,11 @@ class Captcha(object):
                 pix = self.im2.getpixel((y, x))
                 if pix != 255:
                     inletter = True
-            if foundletter == False and inletter == True:
+            if foundletter is False and inletter is True:
                 foundletter = True
                 start = y
 
-            if foundletter == True and inletter == False:
+            if foundletter is True and inletter is False:
                 foundletter = False
                 end = y
                 self.letters.append((start, end))
@@ -89,9 +86,9 @@ class Captcha(object):
             solution = None
 
             for character in DICTIONARY:
-                list = DICTIONARY[character]
+                vector_list = DICTIONARY[character]
 
-                for vector in list:
+                for vector in vector_list:
                     score = v.relation(vector, buildvector(im3))
 
                     if score > buestguess:

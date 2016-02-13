@@ -9,8 +9,6 @@ files = list(sys.argv)
 files.pop(0)
 
 for file in files:
-
-    print(file)
     im = Image.open(file)
     im = im.convert("P")
     im2 = Image.new("P", im.size, 255)
@@ -37,11 +35,11 @@ for file in files:
             pix = im2.getpixel((y, x))
             if pix != 255:
                 inletter = True
-        if foundletter == False and inletter == True:
+        if foundletter is False and inletter is True:
             foundletter = True
             start = y
 
-        if foundletter == True and inletter == False:
+        if foundletter is True and inletter is False:
             foundletter = False
             end = y
             letters.append((start, end))
