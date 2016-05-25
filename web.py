@@ -19,7 +19,7 @@ def robots():
 
 @route('/track/<id>')
 def track(id):
-    details = Tracker().track(id)
+    details = Tracker(id).track(id)
     if details is not None:
         response.set_header('Content-Type', 'application/json')
         return json.dumps(details, cls=DateTimeEncoder, sort_keys=True, indent=4, separators=(',', ': '))
