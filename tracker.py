@@ -8,18 +8,18 @@ from dateutil import parser
 from captcha import Captcha
 from encoder import DateTimeEncoder
 
-HOME_URL = "http://www.indiapost.gov.in/speednettracking.aspx"
 CAPTCHA_URL = "http://www.indiapost.gov.in/captcha.aspx"
 ROOT_URL = "http://www.indiapost.gov.in/"
 
 
 class Tracker:
-    def __init__(self):
+    HOME_URL = str()
+
+    def __init__(self, id):
         self.POST_DATA = {}
-
+        self.HOME_URL = self.getUrl(id)
         self.session = requests.Session()
-        home_response = self.session.get(HOME_URL)
-
+        home_response = self.session.get(self.HOME_URL)
         dom = BeautifulSoup(home_response.content, "html.parser")
 
         inputs = dom.find_all('input')
@@ -40,26 +40,25 @@ class Tracker:
 
         self.POST_DATA['txtCaptcha'] = code
 
-    def track(self, id):
+    def trackSpeedPost(self, id):
         details = {}
         self.POST_DATA['Txt_ArticleTrack'] = id
-        response = self.session.post(HOME_URL, data=self.POST_DATA)
+        response = self.session.post(self.HOME_URL, data=self.POST_DATA)
         dom = BeautifulSoup(response.content, "html.parser")
-
         general_details = dom.find(id="GridView1").findAll('td')
 
         if len(general_details) < 7:
             return None
-
         details['id'] = dom.find(id='Label1').text.strip()
         details['origin'] = general_details[0].text.strip()
-        details['booking_date'] = parser.parse(general_details[1].text.strip())
+        details['booking_date'] = parser.parse(
+            general_details[1].text.strip(), dayfirst=True)
         details['pincode'] = general_details[2].text.strip()
         details['tariff'] = general_details[3].text.strip()
         details['category'] = general_details[4].text.strip()
         details['destination'] = general_details[5].text.strip()
         details['delivery_date'] = general_details[6].text.strip()
-        details['delivered'] = (details['delivery_date'] != 'Not Available')
+        details['delivered'] = (details['delivery_on'] != 'Not Available')
 
         details['events'] = []
 
@@ -67,7 +66,12 @@ class Tracker:
         for tr in events:
             event = {}
             data = tr.findAll('td')
-            event['date'] = parser.parse(data[0].text.strip() + ' ' + data[1].text.strip() + ' IST')
+            event['date'] = parser.parse(
+                data[0].text.strip() +
+                ' ' +
+                data[1].text.strip() +
+                ' IST',
+                dayfirst=True)
             event['office'] = data[2].text.strip()
             event['description'] = data[3].text.strip()
 
@@ -75,8 +79,66 @@ class Tracker:
 
         return details
 
+    def trackRegisteredPost(self, id):
+        details = {}
+        self.POST_DATA['Txt_ArticleTrack'] = id
+        response = self.session.post(self.HOME_URL, data=self.POST_DATA)
+        dom = BeautifulSoup(response.content, "html.parser")
+        general_details = dom.find(id="GridView1").findAll('td')
+
+        if len(general_details) < 7:
+            return None
+        details['id'] = dom.find(id='Lbl_Track1').text.strip()
+        details['origin'] = general_details[0].text.strip()
+        details['booking_date'] = parser.parse(
+            general_details[1].text.strip(), dayfirst=True)
+        details['destination'] = general_details[2].text.strip()
+        details['tariff'] = general_details[3].text.strip()
+        details['category'] = general_details[4].text.strip()
+        details['delivered_at'] = general_details[5].text.strip()
+        details['delivery_date'] = general_details[6].text.strip()
+        details['delivered'] = (details['delivery_on'] != 'Not Available')
+
+        details['events'] = []
+
+        events = dom.find(id='GridView2').findAll('tr')[1:]
+        for tr in events:
+            event = {}
+            data = tr.findAll('td')
+            event['date'] = parser.parse(
+                data[0].text.strip() +
+                ' ' +
+                data[1].text.strip() +
+                ' IST',
+                dayfirst=True)
+            event['office'] = data[2].text.strip()
+            event['description'] = data[3].text.strip()
+
+            details['events'].append(event)
+
+        return details
+
+    def track(self, id):
+        if id[0] == "E":
+            return self.trackSpeedPost(id)
+        elif id[0] == "R":
+            return self.trackRegisteredPost(id)
+
+    def getUrl(self, id):
+        if id[0] == "E":
+            return "http://www.indiapost.gov.in/speednettracking.aspx"
+        elif id[0] == "R":
+            return "http://www.indiapost.gov.in/rnettracking.aspx"
+
 
 if __name__ == '__main__':
     tracker = Tracker()
-    print(json.dumps(tracker.track("EM870359070IN"), cls=DateTimeEncoder, sort_keys=True, indent=4,
-                     separators=(',', ': ')))
+    print(
+        json.dumps(
+            tracker.track("EM870359070IN"),
+            cls=DateTimeEncoder,
+            sort_keys=True,
+            indent=4,
+            separators=(
+                ',',
+                ': ')))
