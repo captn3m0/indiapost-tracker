@@ -24,6 +24,10 @@ The API root url is <https://india-post-tracker-api.captnemo.in/>.
 - Oct-2015: API Shifted from Heroku-US to Heroku-EU region because India Post was blocking
   requests for the us-east region, it seems.
 
+## Credits
+
+This is currently maintained by [Vatsal Shah](@hornedbull).
+
 ## License
 
 Licensed under the [MIT License](http://nemo.mit-license.org/)
