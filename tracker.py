@@ -16,6 +16,7 @@ class Tracker:
     HOME_URL = str()
 
     def __init__(self, id):
+        self.id = id
         self.POST_DATA = {}
         self.HOME_URL = self.getUrl(id)
         self.session = requests.Session()
@@ -40,7 +41,9 @@ class Tracker:
 
         self.POST_DATA['txtCaptcha'] = code
 
-    def trackSpeedPost(self, id):
+
+    def trackSpeedPost(self):
+        id = self.id
         details = {}
         self.POST_DATA['Txt_ArticleTrack'] = id
         response = self.session.post(self.HOME_URL, data=self.POST_DATA)
@@ -79,7 +82,8 @@ class Tracker:
 
         return details
 
-    def trackRegisteredPost(self, id):
+    def trackRegisteredPost(self):
+        id = self.id
         details = {}
         self.POST_DATA['Txt_ArticleTrack'] = id
         response = self.session.post(self.HOME_URL, data=self.POST_DATA)
@@ -118,24 +122,24 @@ class Tracker:
 
         return details
 
-    def track(self, id):
-        if id[0] == "E":
-            return self.trackSpeedPost(id)
-        elif id[0] == "R":
-            return self.trackRegisteredPost(id)
+    def track(self):
+        if self.id[0] == "E":
+            return self.trackSpeedPost()
+        elif self.id[0] == "R":
+            return self.trackRegisteredPost()
 
     def getUrl(self, id):
-        if id[0] == "E":
+        if self.id[0] == "E":
             return "http://www.indiapost.gov.in/speednettracking.aspx"
-        elif id[0] == "R":
+        elif self.id[0] == "R":
             return "http://www.indiapost.gov.in/rnettracking.aspx"
 
 
 if __name__ == '__main__':
-    tracker = Tracker()
+    tracker = Tracker("EM870359070IN")
     print(
         json.dumps(
-            tracker.track("EM870359070IN"),
+            tracker.track(),
             cls=DateTimeEncoder,
             sort_keys=True,
             indent=4,
