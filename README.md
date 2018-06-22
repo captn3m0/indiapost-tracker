@@ -2,12 +2,10 @@
 
 Simple no-captcha required API for tracking packages on the India Post website.
 
- - JSON API
- - No CAPTCHA
- - ISO formatted timestamps
- - Returns all events and available data for the given Item
- - Unofficial API. No liabilities
- - Requests are currently logged because [Heroku does not offer a way to disable logging](http://stackoverflow.com/questions/22582466/disable-heroku-router-logs). This data will never be sold or given to a third-party.
+-   JSON API
+-   No CAPTCHA
+-   Returns all events and available data for the given Item
+-   Unofficial API. No liabilities
 
 ## How to use
 
@@ -15,18 +13,59 @@ Make a request to
 
     /track/:ITEM_ID
 
-[Here](http://hurl.eu/views/6e49285668da0a89c765d89197fbbca6c37db896) is a sample response.
+### Sample Response
+
+```json
+{
+    "booking_date": "9/27/2014 4:22:00 PM",
+    "delivered": true,
+    "delivery_date": "9/29/2014 7:57:00 AM",
+    "destination": "2150",
+    "destination_country": "Australia",
+    "events": [
+        {
+            "country": "Australia",
+            "location": "SYDNEY EMS",
+            "mail_category": "A",
+            "next_office": "ISC NEW YORK NY (USPS)",
+            "time": "9/27/2014 4:22:00 PM",
+            "type": "Receive item at office of exchange (Inb)"
+        },
+        {
+            "country": "Australia",
+            "location": "AUMXBT",
+            "mail_category": "A",
+            "next_office": "-",
+            "time": "9/29/2014 7:57:00 AM",
+            "type": "Receive item at delivery office (Inb)"
+        },
+        {
+            "country": "Australia",
+            "location": "2150",
+            "mail_category": "A",
+            "next_office": "-",
+            "time": "9/29/2014 7:57:00 AM",
+            "type": "Deliver item (Inb)"
+        }
+    ],
+    "id": "ED123456789IN",
+    "origin": "SYDNEY EMS",
+    "origin_country": "Australia"
+}
+```
 
 The API root url is <https://india-post-tracker-api.captnemo.in/>.
 
 ## Changelog
 
-- Oct-2015: API Shifted from Heroku-US to Heroku-EU region because India Post was blocking
-  requests for the us-east region, it seems.
+-   June 2018: API switched to `ipsweb.ptcmysore.gov.in` from `indiapost.gov.in` on [suggestion from @troysk704](https://twitter.com/troysk704/status/1010165300069715968)
+-   Oct-2015: API Shifted from Heroku-US to Heroku-EU region because India Post was blocking
+    requests for the us-east region, it seems.
 
 ## Credits
 
-This is currently maintained by [Vatsal Shah](@hornedbull).
+-   This is currently maintained by [Vatsal Shah](@hornedbull).
+-   Thanks to Troy SK for telling me about <http://ipsweb.ptcmysore.gov.in/ipswebtracking/>
 
 ## License
 
