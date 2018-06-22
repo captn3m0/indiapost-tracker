@@ -78,5 +78,5 @@ class Tracker:
 
 if __name__ == '__main__':
     tracker = Tracker()
-    print(json.dumps(tracker.track("EM870359070IN"), cls=DateTimeEncoder, sort_keys=True, indent=4,
-                     separators=(',', ': ')))
+    print((json.dumps(tracker.track("EM870359070IN"), cls=DateTimeEncoder, sort_keys=True, indent=4,
+                     separators=(',', ': '))))
