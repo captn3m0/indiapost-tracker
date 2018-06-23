@@ -1,7 +1,7 @@
 import json
 import sys
 
-from bottle import route, run, static_file, response, abort
+from bottle import route, run, static_file, response, abort, request
 
 from encoder import DateTimeEncoder
 from tracker import Tracker
@@ -19,7 +19,8 @@ def robots():
 
 @route('/track/<id>')
 def track(id):
-    details = Tracker().track(id)
+    international = 'international' in request.query
+    details = Tracker().track(id, international)
     if details is not None:
         response.set_header('Content-Type', 'application/json')
         return json.dumps(details, cls=DateTimeEncoder, sort_keys=True, indent=4, separators=(',', ': '))

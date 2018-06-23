@@ -1,6 +1,7 @@
 import json
 from io import BytesIO
 
+from international import InternationalTracker
 import requests
 from bs4 import BeautifulSoup
 from dateutil import parser
@@ -14,33 +15,35 @@ ROOT_URL = "http://www.indiapost.gov.in/"
 
 
 class Tracker:
-    def __init__(self):
-        self.POST_DATA = {}
+    # def __init__(self):
+        # self.POST_DATA = {}
 
-        self.session = requests.Session()
-        home_response = self.session.get(HOME_URL)
+        # self.session = requests.Session()
+        # home_response = self.session.get(HOME_URL)
 
-        dom = BeautifulSoup(home_response.content, "html.parser")
+        # dom = BeautifulSoup(home_response.content, "html.parser")
 
-        inputs = dom.find_all('input')
+        # inputs = dom.find_all('input')
 
-        for input in inputs:
-            if 'value' in input.attrs:
-                self.POST_DATA[input.attrs['name']] = input.attrs['value']
-            else:
-                self.POST_DATA[input.attrs['name']] = None
+        # for input in inputs:
+        #     if 'value' in input.attrs:
+        #         self.POST_DATA[input.attrs['name']] = input.attrs['value']
+        #     else:
+        #         self.POST_DATA[input.attrs['name']] = None
 
-        self.captcha_url = dom.find(id="imgcap").attrs['src']
+        # self.captcha_url = dom.find(id="imgcap").attrs['src']
 
-        captcha_response = self.session.get(ROOT_URL + self.captcha_url)
-        captcha_file = BytesIO()
-        captcha_file.write(captcha_response.content)
+        # captcha_response = self.session.get(ROOT_URL + self.captcha_url)
+        # captcha_file = BytesIO()
+        # captcha_file.write(captcha_response.content)
 
-        code = Captcha(captcha_file).crack()
+        # code = Captcha(captcha_file).crack()
 
-        self.POST_DATA['txtCaptcha'] = code
+        # self.POST_DATA['txtCaptcha'] = code
 
-    def track(self, id):
+    def track(self, id, international):
+        if international:
+            return InternationalTracker().track(id)
         details = {}
         self.POST_DATA['Txt_ArticleTrack'] = id
         response = self.session.post(HOME_URL, data=self.POST_DATA)
@@ -79,4 +82,4 @@ class Tracker:
 if __name__ == '__main__':
     tracker = Tracker()
     print((json.dumps(tracker.track("EM870359070IN"), cls=DateTimeEncoder, sort_keys=True, indent=4,
-                     separators=(',', ': '))))
+                      separators=(',', ': '))))
