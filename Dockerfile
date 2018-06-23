@@ -7,5 +7,5 @@ COPY requirements.txt /app
 RUN pip install -r requirements.txt
 COPY . /app/
 
-ENTRYPOINT ["python", "web.py", "3000"]
+ENTRYPOINT ["python", "-u", "web.py", "3000"]
 EXPOSE 3000

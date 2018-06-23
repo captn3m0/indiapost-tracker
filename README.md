@@ -107,9 +107,15 @@ by using `/track/:ITEM_ID?international=true`. This gives you a few extra detail
 
 The API root url is <https://india-post-tracker-api.captnemo.in/>.
 
+## Docker
+
+You can run this as a docker container as well:
+
+`docker run --detach --publish 3000:3000 captn3m0/indiapost-tracker` and access the service locally using http://localhost:3000
+
 ## Changelog
 
--   June 2018: API switched to `ipsweb.ptcmysore.gov.in` from `indiapost.gov.in` on [suggestion from @troysk704](https://twitter.com/troysk704/status/1010165300069715968)
+-   June 2018: International support added using `ipsweb.ptcmysore.gov.in` [suggestion from @troysk704](https://twitter.com/troysk704/status/1010165300069715968)
 -   Oct-2015: API Shifted from Heroku-US to Heroku-EU region because India Post was blocking
     requests for the us-east region, it seems.
 
