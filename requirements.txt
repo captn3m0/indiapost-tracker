@@ -1,6 +1,5 @@
 beautifulsoup4==4.6.0
 bottle==0.12.13
-Pillow==5.1.0
 python-dateutil==2.7.3
 requests==2.19.1
 six==1.11.0
