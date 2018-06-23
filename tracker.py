@@ -29,36 +29,32 @@ class Tracker:
 
         try:
             general_details = dom.find(id=ARTICLE_DETAILS_ID).findAll('td')
+            details = {'id': id,
+                       'origin': general_details[0].text.strip(),
+                       'booking_date': parser.parse(general_details[1].text.strip()),
+                       'pincode': general_details[2].text.strip(),
+                       'tariff': general_details[3].text.strip(),
+                       'category': general_details[4].text.strip(),
+                       'destination': general_details[5].text.strip(),
+                       'delivery_date': general_details[6].text.strip()
+                       }
+            details['delivered'] = details['delivery_date'] != 'Not Available'
+
+            details['events'] = []
+
+            events = dom.find(class_='responsivetable MailArticleEvnt').findAll('tr')[1:]
+            for tr in events:
+                event = {}
+                data = tr.findAll('td')
+                event['date'] = parser.parse(data[0].text.strip() + ' ' + data[1].text.strip() + ' IST')
+                event['office'] = data[2].text.strip()
+                event['description'] = data[3].text.strip()
+
+                details['events'].append(event)
+
+            return details
         except Exception as e:
             return None
-
-        if len(general_details) < 7:
-            return None
-
-        details = {'id': id,
-                   'origin': general_details[0].text.strip(),
-                   'booking_date': parser.parse(general_details[1].text.strip()),
-                   'pincode': general_details[2].text.strip(),
-                   'tariff': general_details[3].text.strip(),
-                   'category': general_details[4].text.strip(),
-                   'destination': general_details[5].text.strip(),
-                   'delivery_date': general_details[6].text.strip(),
-                   'delivered': (details['delivery_date'] != 'Not Available'),
-                   }
-
-        details['events'] = []
-
-        events = dom.find(class_='responsivetable MailArticleEvnt').findAll('tr')[1:]
-        for tr in events:
-            event = {}
-            data = tr.findAll('td')
-            event['date'] = parser.parse(data[0].text.strip() + ' ' + data[1].text.strip() + ' IST')
-            event['office'] = data[2].text.strip()
-            event['description'] = data[3].text.strip()
-
-            details['events'].append(event)
-
-        return details
 
 
 if __name__ == '__main__':
