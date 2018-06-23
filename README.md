@@ -13,7 +13,58 @@ Make a request to
 
     /track/:ITEM_ID
 
-### Sample Response
+If you know that a package is international, you can force a different "international-only" response
+by using `/track/:ITEM_ID?international=true`. This gives you a few extra details about the country
+
+### Sample Response (/track/:ITEM_ID)
+
+```json
+{
+    "booking_date": "2018-06-15T00:00:00",
+    "category": "SPA",
+    "delivered": true,
+    "delivery_date": "19/06/2018",
+    "destination": "Faridabad Sector 7 S.O",
+    "events": [
+        {
+            "date": "2018-06-19T16:42:55+05:30",
+            "description": "Item delivered",
+            "office": "Faridabad Sector 7 S.O"
+        },
+        {
+            "date": "2018-06-16T08:42:18+05:30",
+            "description": "Bag Despatched to ICH FARIDABAD",
+            "office": "DELHI RMS"
+        },
+        {
+            "date": "2018-06-16T07:05:40+05:30",
+            "description": "Bag Received",
+            "office": "DELHI RMS"
+        },
+        {
+            "date": "2018-06-16T03:24:33+05:30",
+            "description": "Bag Despatched to DELHI RMS",
+            "office": "BNPL SP Hub NEW DELHI"
+        },
+        {
+            "date": "2018-06-16T02:06:10+05:30",
+            "description": "Item Bagged for ICH FARIDABAD",
+            "office": "BNPL SP Hub NEW DELHI"
+        },
+        {
+            "date": "2018-06-15T20:41:03+05:30",
+            "description": "Item Booked",
+            "office": "BNPL SP Hub NEW DELHI"
+        }
+    ],
+    "id": "PP116215523IN",
+    "origin": "BNPL SP Hub NEW DELHI",
+    "pincode": "121006",
+    "tariff": "35.00"
+}
+```
+
+## Sample API Response (/track:ITEM_ID?international=true)
 
 ```json
 {
