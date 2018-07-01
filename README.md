@@ -1,5 +1,7 @@
 # India Post Tracking API
 
+[![](https://images.microbadger.com/badges/version/captn3m0/indiapost-tracker:latest.svg)](https://microbadger.com/images/captn3m0/indiapost-tracker:latest) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](http://www.wtfpl.net/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
 Simple no-captcha required API for tracking packages on the India Post website.
 
 -   JSON API
