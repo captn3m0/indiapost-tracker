@@ -1,5 +1,5 @@
 beautifulsoup4==4.7.1
-bottle==0.12.13
+bottle==0.12.16
 python-dateutil==2.8.0
 requests==2.21.0
 six==1.11.0
