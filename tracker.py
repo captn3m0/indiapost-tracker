@@ -7,24 +7,23 @@ from dateutil import parser
 from encoder import DateTimeEncoder
 
 TRACKING_URL = "https://www.indiapost.gov.in/_layouts/15/DOP.Portal.Tracking/TrackConsignment.aspx"
-ARTICLE_DETAILS_ID = "ctl00_PlaceHolderMain_ucOERControl_gvTrckMailArticleDtls"
+ARTICLE_DETAILS_ID = "ctl00_PlaceHolderMain_ucOERControl_gvTrckMailArticleDtlsOER"
 
 
 class Tracker:
     def __init__(self):
-        self.POST_DATA = {
-            "__VIEWSTATE": "pW37hBUqyhnv3HPmhysIDIm29rE9VueSxrSMY5xkDSpE5XGO+gcNyQFHNOzQoCBPqmQgBsnbPe1xZhmkcBFVxkOtLSZF6HAlDW/NEQvycp0nUMfzkNQBev4rh90b1FF8rRYppfhtz1f6m8AoVxAVUA1bVaL8+Vpu7MKbAEHJ+wFkpv77I5CqKSnxGSDAyidk3e0he2rdcSNljT/tljA/eFoqivOUCYz7Ayvb2KXXHV40IG/37AHZQDI1k9y/qZ6DEDY+LT/iK/hVayvw5h7LxFqwNKHGlvGuMmlreuPBpEXhFiBIXdeuVrVejdILcQsk7pUVOiyPOC4fb4PlMkWLd+nZl2v89BDpaD0RrGt8kdy9w64q2mlxCtVq3gVdN1942Dkc90lzQ8ou2cK4gk0nJ2ApPikWA6yPta6JnQdkGQsO+5u5EsNOcIB2BWR8bKgtNQRHt4VCSNg8Vit3FzlVC3+PB2aJo0KEVmGYnFHV/Na3XVkFgSWhgiS/WvvCIS7r5RRw+0ps8ri9zh5qZcQyY0g70hIrSqxV+6MF7YjL80tYDKXv9tkrOLgkDiWdGhIk6GQSFvZdjJUfezVmc3R1gLJGnXaf//595FSYbBA2GUvoFSsecgBZ8IY0KD6aQ2j0tm7gPryJsdxf7443r9s/el4WynG7hSKyY0FLq/h5HRK/+rvIKPbmAadt8xnlhU0a+H4HTopx068Vxu8Mp8YdGQVB+OI8ZKNS9MlaLKmUj310pWyNzLXhfqbtGXFVePb6QF2ymMTGT3uW8UyYd1NlUVOu9bfposaD0pDVmj7RY4PtzCONZiOiQnAHCtbdRvjAYiavTGzac4TI5cXGLgKQaJuP6idZzyGkDBWZrT9ycKkb9+Qfc5ItveCjyhRsS0Wn8ART3ujpVHECSYIx/3/0U/PAgcavY6HntoJkhRdSJc6+sC0qgHvEhpqjep6MrqYbHKZ4FZuknHThrxhA9vaEYmQDBl2CJ4Z2n0QLrq6z6F5nSkyh0G1Ms6hnLvaoagXtFH5LzuTHy6Fn1la7kCZ1TpQsAFXKLPD+3TcEG7xPG7QQ4vAum6WqnubT9PeM3xXrmNEgziw2GJgOfJo+6QUxlEe1LzutLorNHGLC9lxwcC2AiyxojlU1y3h0KuNSE9Ti+t7JZR4edAACNqqWh/QCjypt4e1Fe/gMMBvcAP5iIYSyeHu1JrYt5bdSduTAG0Bq+jeo6U43ylMgTVLranV2fph2myR3mPovuI8yUiy4tWul8YMpT8kmwMWnmIHdDds8cMHChpNHbisY6zD5VnIKKYCe53d1km+HYa4QDW+Zbf0iokArIFAeaSWMmywMPaOD3jcRdCq5BM22wm50l6ZC0yLm+g96QncAHI9iIlPNWoT7Lj4dOR57eR6dvM9lLe4sTr8nXP81JghbpvC7OcA98VCZnkdgmRQ3FNM3zS8XRhvQ7hjUClINDao+8gZsAnVJ3Y1BphOQDROWdRPthTDWMDU8llCzouKHN3bATdzqcUfCff3GvKy8G8C4ulSvcwH5z+7XldVLBoZcCSkxLJn7qllbK7nXvgepyr2bgwnau+M44qrq+X2VoJmlZ58Y4HeKNBfavJDP0pjFxfvc9co7j6ub0k74yiv0MoeMOL7NlBgV8LUdVjLP2aYcOCPZ4PIIeibhu8rUIPDYX7ShEB+uYr0QFGilrZ9iYtwKqKxOMrsCkeqtYU81noZja23seFDThmaDJ5sNz3S4xLNx2L115RoDsEfwqWXYFt5fE0drR7cXkE5Pa1/1P5U/8kBOh/k6SZjBJ8os3zp57SeriNgUDv9mrbf6aGWCHBgc4uNGzHBjv6g+KEYK96Sx2Z1eX0ZP",
-            "__VIEWSTATEENCRYPTED": "",
-            "__EVENTVALIDATION": "QoGNrZX5GdTk7GfKERTyHOYHEuS0eeDtGieHuZYO/hs5mM8KacgsDou6eDmCWS5TkZqlaoTsf3LgSs1AXVkTzSJxNKqGUkb8EjXNhpHwhB1+34V3/psFqFnSyVqODOs45xCDsjt5BPwcpCM/IYGzY0UvVViJAlrU4kcxwI21IZy6Z3DMjtIl+78zbrrNPdY6y+ebhanMCSqYxVxjEp+Jr87+hg2d5QqHnrLm9NlkmL8=",
-            "ctl00$PlaceHolderMain$ucOERControl$txtOrignlPgTranNo": "PP116215523IN",
-            "ctl00$PlaceHolderMain$ucOERControl$txtCaptcha": "d9067d",
-            "ctl00$PlaceHolderMain$ucOERControl$btnSearch": "Search"
-        }
+        self.POST_DATA = "ctl00%24ScriptManager=ctl00%24PlaceHolderMain%24ucOERControl%24upnlTrackConsignment%7Cctl00%24PlaceHolderMain%24ucOERControl%24btnSearch&__REQUESTDIGEST=0x0C129F9F4E6505B556DF4189ECC53D3265A1D02A736D8A4216234289B8A65B544389510F1103DBA949B4CD1C7B00E8A90237FEBC85B9798253B4AD9C4D14FE2B%2C12%20May%202019%2018%3A18%3A10%20-0000&__VIEWSTATE=LTMTJEN2p%2FY5gVLohrpnPr058t4%2FMKLhRoLhZ76mPox9pt7lStcu988vCK5dFlIiPTC3Y%2FkKEeLgNDNla4UYRN253ZJcdkvaihxvcSAwXn0%2Bogrzv4qknEm%2BfCY9Cqd1jvR5pP7A8kuzI4Ek7830VpXO%2FhAxEo4nlgqVyGKMErfBVTxHhdcMJGDl0yD7xVQa9CR8BHM9vmtBKWNDwRJJIjRv8j56yw%2FG4gOi16vtLSFJZyb2FmdriD3ZLeI8Psr3XTRRw2aoSHos6UUXg4DZuugVUngQg4Q6CAfr8BSXrpv0mT%2B%2B2srmu4A6oEUFnapIz17nyLRTYPP8G%2F%2BPB4L0XUCl996dF%2B2GKsWkQP6grfNJfzMtuhviNl2kdXlEuFFDPyeOL3AYaDc%2FXM5WRAf9Tq2yLHYlqNLRN6EHtR8j4F%2BWkH07pfXLQvYvby3fQJJrGZkdwQLAKrfPTkot5TYs2UiSYMwaPyvVhswevBK7Qsik58GCe3b0yHaqx7D1mzJYeT8lP58H4A8Ug12EQkjDja12GYu3gtO4bOLUy4s9AL1BWRYwFxdKSzRoVGtVcvNfXTxSQF80rtviQfUzvULR9edN9UzebiGvJgQz2%2Bz7KH4dXdKmhM3R9%2Bqwm%2BDHMB2e89Uo8HcZBU0dTVPwtY9JQXwMGPGA2HOV01VLxLUZkNWa2qr%2FFrmfi6NnfnrAJXsR1sdGTLVaCdCK0yNcL3gDjtBQjHHlsnCvUKUZJet4DExkkR1lVeZlqKX35t5UIwA4Qbm45rQRSPIf9MbGa27kmrJ%2FjiZ4OSoBvM0aT2jjrRJXyHaWzrw%2FS%2FTxy%2FldqnZFLKKhU5udmFEfSETfS6B3FGLhrXNMug4svnIfeAXeB69s9SPR4z2RTe8z23alMHJS5TUkmJokS5MYgWgkFsg3ZE1lONsLsXCMTdNnH3G3FRMtowUCPVcpYUTJJRqusz1r0Rjl6yEyrBFgugt%2BHGBWkBxDHmbfdXJEQEIfmCvgK5wqtwK4%2BWNv0ethmQPZfvw9EDqC%2BbrJ5K%2B8o5vVNuP5DQFS0edMPhYCpUp%2BjgUz2rGV9RgEP6Yi2hT6jNnLxuYT3QfV9J%2B%2Bn5Gr8jPdJiBSGWNXRNJT6x4Aoxq2DNpEC47nT0Zm3d8meWjkQAzMy0NBGu5WMgRG3Eau8s55YK1fV5vxWbJVvOMADm5eFlPfNHl31hGHyfdgMKHfRgAimcj%2Bp3VIOah5hMf%2F9vqTbJzgSqlQFwx5t6D7O8zC09B0fDpjLDY32bNepoA1MErD2qDrENO5qWNqm8kyUJsm7ruQ0ZiSEDka5cGTF8e%2FFbD0brypbpDy5VETwWoxX7f9hLgnvcO9mgRAlJ%2FvolRlqDZFv378WUGd1rVMBJdOzyaUH5LDhrG6u1j90xQzbRYuQB0xK8YhWyFK9ex2UQLEQiesUufpYXgwZ3z%2BEfJ6S6Igb%2BXZAaGV%2BbHPaOeZef1oBIkmUW20%2FQIyRMYecQxCNklB4czVrQemjnVDBjaEqWqkC7ao0yAONx21sggoJgNmlafZRHOT%2FlLMjC%2BfpZMj5HkLnMH3as1A4e8zKAgf5u0BbqQ8lsCBaB8pe%2Fmb3l%2FvdfSjDtlUNImDfAXJQewB5xHzBxRA9a2XRP67%2FbN4tQ5QyJRzctgD8kdIGBJoXHnZ6DDvOvqb9XE78JnO5Fth8eflr9k0NB9L1lfHtsemIgm%2BsVFX9RaNBO4NmzT16PYws085ykhn9u3Hfntqv5Hh2ReGPuZ2Ypa5UmLKLC0GXXxeUwXytIYd14M990rlmFER%2FyXGXYbO7SlLnQFOV%2FfLsNNk0HTkroHFwo5T2v8kKSZbVCtsOm7l45nCkgZB8jDDVL%2BQ1X19rnf5FxPfTG6c8xZTKLH6027Ikh1Yw8IHG4igbRuaAIOZ0v2b80h1%2FST2Tda9qMY8QtTNRJfKFe3%2F7Dhw6iz6b%2FIZ2Q%2FKoVBUK8aSQz2UrbjNHaYGdMkhCkyoP7WNh6WVe94%2BwpMuL3KaN0xjhIDSPTbnpMDhJUI%2B5Ci%2BRcG8lz8TWy5qZyKe%2Fh6QcYMf7xZ0uuFtnNbuSPbd90ZdkMivMX3HqJhLQTmbVWkB2dLiuEqp0JUHVuF6OAOhuzlULP0vpfcfyeFmcDUfqLhsB3ff8ew8taMSlI4Wf4RY5DoFmVPp69xUy2Q6abEmd2kZN6Pyt%2FCgi3%2FbkQx7Niw65zVzjow9bH1rauJN%2BMPvLGXIoVqgPboYF%2BihUkhjmP9mld6V5dNCVVQWiJ9vAB3c6PF2MLdk3rhixhcY91q31k76S%2F40BKt%2B1TF3p2o6IOpdo4xeC1CK3q3vxbfWXyEVr5pOdaZLFMF2xElCgmKxVWaUFXxFhw35G%2F%2FJ6KzXW0MFubDhYU%2BD9OP8ZndMI%2FX6%2BCMT997Uyhs7ZCuVHCy5o41S3%2Bh3ay%2FICNUf0b1ZGtt%2BX32rqlEv9D9otOu2eK3zXxfEwnPBulJdQgXAYwVepqdYW6HaXGujS6GEdaPKcFr28bWKfUEh0sA8dOwFFiboBiHSXuhdg0jKHgEV6Me1uH%2BH3EBr1h1ptvjE70hpt6dCkFx01F8afUhK4iRh50MgL%2BUlc9z11%2FTry5OKkXvkCNQegmKVkKmNZZBCjyon6dKu7RsmhbpSmTf%2FmlwUjOBAzf07On0C5wKZVZh21yZhqk%2BjjSyESVNOnWNP0SRbwTYmEbFNvLDHFUlXubmumlLOheEApDS8OdEplr4Mg82n5NiZQP1DSt9SoftbvIfppx9qZhsHNxYDNYfJPmyKugGnIqtGsfGy1KEqkAa%2BzU00OIi2qo9if9FDDZHz4nn2%2FPhutW2C3eIbijjiZHvoVbBGF%2BEbwrlsONYxIs4ZFiiSBmhvetDYkaJe87CL9nc%2F5F2s9aNSnfUARRi8ixTFD%2BHBWA%3D%3D&__VIEWSTATEGENERATOR=BA91C67B&__VIEWSTATEENCRYPTED=&__EVENTVALIDATION=5eefHwdGHeMKpu%2F7Z%2FrkAtbcnu5%2BhSbpYqPHlIedBwKXHebDAIAO2pniexdp84O8GkmOvWEPI6SBudzZJKGoIonceDkw4WsSEjJL5IBre67wMS4fUF7MYF94GsyUPAJ5yBQBiUapbyC43XHFdNjxt2h4azGeCpaupsLfdgtaTnGyNVZQHfMY5K7KurfnCVUNuwIEIjnxOJEWXwN%2B8ZFlXhHoHQqezt%2FL92IrCURwjPk59ermz%2BWJ8w3hsTkq7e8V%2FGtjVCKsnkt52cNS7k%2FLAg%3D%3D&ctl00%24PlaceHolderMain%24ucOERControl%24txtOrignlPgTranNo=EO430454377IN&ctl00%24PlaceHolderMain%24ucOERControl%24txtCaptcha=7f1658&ctl00%24PlaceHolderMain%24ucOERControl%24btnSearch=Search"
 
     def track(self, id):
         details = {}
-        self.POST_DATA["ctl00$PlaceHolderMain$ucOERControl$txtOrignlPgTranNo"] = id
-        response = requests.post(TRACKING_URL, data=self.POST_DATA)
+        self.POST_DATA = self.POST_DATA.replace("EO430454377IN", id)
+        headers = {
+          "User-Agent": "Mozilla",
+          "Referer": "https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx",
+          "X-Requested-With": "XMLHttpRequest",
+          'content-type': "application/x-www-form-urlencoded"
+        }
+        response = requests.post(TRACKING_URL, data=self.POST_DATA, headers = headers)
         dom = BeautifulSoup(response.content, "html.parser")
 
         try:
@@ -36,28 +35,22 @@ class Tracker:
                        'tariff': general_details[3].text.strip(),
                        'category': general_details[4].text.strip(),
                        'destination': general_details[5].text.strip(),
-                       'delivery_date': general_details[6].text.strip()
                        }
-            details['delivered'] = details['delivery_date'] != 'Not Available'
+            if len(general_details) > 6:
+                general_details['delivery_date'] = general_details[6].text.strip()
+                details['delivered'] = details['delivery_date'] != 'Not Available'
 
             details['events'] = []
 
-            events = dom.find(class_='responsivetable MailArticleEvnt').findAll('tr')[1:]
+            events = dom.find(class_='responsivetable MailArticleEvntOER').findAll('tr')[1:]
             for tr in events:
                 event = {}
                 data = tr.findAll('td')
                 event['date'] = parser.parse(data[0].text.strip() + ' ' + data[1].text.strip() + ' IST')
                 event['office'] = data[2].text.strip()
                 event['description'] = data[3].text.strip()
-
                 details['events'].append(event)
 
             return details
         except Exception as e:
             return None
-
-
-if __name__ == '__main__':
-    tracker = Tracker()
-    print((json.dumps(tracker.track("PP116215523IN"), cls=DateTimeEncoder, sort_keys=True, indent=4,
-                      separators=(',', ': '))))
