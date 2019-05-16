@@ -59,3 +59,4 @@ crashlytics-build.properties
 __pycache__/
 local_settings.py
 .pycharm-bash
+.env
