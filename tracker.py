@@ -146,8 +146,14 @@ class Tracker:
 
         details = self.parse_html(response.content)
 
+        # If we broke the captcha, remember these details for future
         if details != None:
             self.saved_data = data
+        # If we didn't, ensure that this data isn't saved any more
+        # TODO: Only do this for failed captchas, and not
+        # invalid tracking IDs
+        elif self.saved_data == data:
+            self.saved_data = None
 
         return details
 
