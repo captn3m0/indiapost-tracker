@@ -20,6 +20,7 @@ CAPTCHA_FIELD="ctl00$PlaceHolderMain$ucOERControl$txtCaptcha"
 
 class Tracker:
     def __init__(self):
+        self.saved_data = None
         self.get_headers = {
           "User-Agent": "Mozilla",
           "Referer": TRACKING_URL
@@ -116,26 +117,38 @@ class Tracker:
             # raise e
             return None
 
+    def is_saved(self):
+        return self.saved_data != None
+
     def track(self, id):
-        data, captcha_details = self.get_form_data()
 
-        # with open('/tmp/data.json', 'w') as f:
-        #     f.write(json.dumps(data))
+        if self.saved_data:
+            data = self.saved_data
+        else:
+            data, captcha_details = self.get_form_data()
 
-        # with open('/tmp/captcha.json', 'w') as f:
-        #     f.write(json.dumps(captcha_details))
+            # with open('/tmp/data.json', 'w') as f:
+            #     f.write(json.dumps(data))
 
-        data[CAPTCHA_FIELD] = self.solve_captcha(captcha_details)
-        data[TRACKING_ID_FIELD] = id
+            # with open('/tmp/captcha.json', 'w') as f:
+            #     f.write(json.dumps(captcha_details))
 
-        # with open('/tmp/data.json', 'w') as f:
-        #     f.write(json.dumps(data))
+            data[CAPTCHA_FIELD] = self.solve_captcha(captcha_details)
+            data[TRACKING_ID_FIELD] = id
+
+            # with open('/tmp/data.json', 'w') as f:
+            #     f.write(json.dumps(data))
 
         response = requests.post(TRACKING_URL, data=data, headers=self.headers)
 
         # with open('/tmp/debug.html', 'w+b') as f:
         #     f.write(response.content)
 
-        return self.parse_html(response.content)
+        details = self.parse_html(response.content)
+
+        if details != None:
+            self.saved_data = data
+
+        return details
 
 

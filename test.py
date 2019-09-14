@@ -9,9 +9,10 @@ def test_captcha_solves():
     assert solve("captchas/test/c.png", "Evaluate the Expression") == '6'
     assert solve("captchas/test/test.gif", "Enter characters as displayed in image") == 'c9a8c2'
 
-def test_numbers_3_4():
+def test_e2e_tracking():
     data = t.track("ED123456789IN")
     assert data != None
+    assert t.is_saved()
 
 def test_html_parsing():
     with open("fixtures/response.html") as f:
