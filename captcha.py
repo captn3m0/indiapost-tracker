@@ -1,70 +1,49 @@
-from PIL import Image
-from vectorcompare import VectorCompare
-import subprocess
-import tempfile
 import os
-import sys
+import re
+import tempfile
+from calculator.simple import SimpleCalculator
+import subprocess
+from textcaptcha import TextCaptcha
 
-v = VectorCompare()
 
-def buildvector(im):
-    d1 = {}
-    count = 0
-    for i in im.getdata():
-        d1[count] = i
-        count += 1
-    return d1
+def parse_instructions(instructions):
+    # Enter the First number
+    if re.search('number', instructions, re.IGNORECASE):
+        index_to_num = ["first", "second", "third", "fourth", "fifth"]
+        return ('pick', index_to_num.index(instructions.split(' ')[2].lower()))
+    # Evaluate the Expression
+    elif re.search('evaluate', instructions, re.IGNORECASE):
+        return ('evaluate', None)
+    # Enter characters as displayed in image
+    else:
+        return ('read', None)
 
-class CaptchaOracle:
+def solve(filename, instructions):
+    c = SimpleCalculator()
+    captcha_type, char_index = parse_instructions(instructions)
 
-    # Directory is the directory with all the captchas
-    def __init__(self, directory=""):
-        self.imageset = []
+    if captcha_type=="evaluate":
+        string = recognize(filename)
+        c.run(' '.join(list(string)))
+        return int(c.lcd)
+    elif captcha_type=="pick":
+        string = recognize(filename)
+        return string[char_index]
+    else:
+        c = TextCaptcha(filename)
+        return c.solve()
 
-        iconset = ['1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
+def recognize(filename):
+    fp = tempfile.NamedTemporaryFile()
+    subprocess.run(["tesseract", filename, fp.name, "--psm", "7",  "-c", 'tessedit_char_whitelist=1234567890,+-='], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    with open(fp.name + ".txt", 'r') as file:
+        data = file.read().replace('\n', '')
+    # Delete fp.name + ".txt"
+    return data.strip()
 
-        for letter in iconset:
-            letterset = []
-            for img in os.listdir("%s/%s"%(directory, letter)):
-                v = buildvector(Image.open("%s/%s/%s"%(directory, letter, img)))
-                self.imageset.append({"letter":letter,"v": v, "img": img})
-
-    def guesses(self, vector):
-        guesses = []
-        for data in self.imageset:
-            guesses.append(
-                (
-                    v.relation(data["v"], vector),
-                    data["letter"],
-                    data["img"]
-                )
-            )
-        guesses.sort(reverse=True)
-        return guesses
-
-oracle = CaptchaOracle("./captchas/letters")
-
-class Captcha:
-    def __init__(self, filename):
-        fp = tempfile.NamedTemporaryFile(suffix=".gif")
-        self.d = tempfile.mkdtemp()
-        subprocess.run(["convert", "-fill", "white", "+opaque", "black", "-crop", "165x60+20", filename, fp.name])
-        subprocess.run(["convert", "-crop", "6x1@", fp.name, self.d + "/captcha.png"])
-        subprocess.run(["mogrify", "-trim", self.d + "/captcha-*.png"])
-
-    def break_images(self):
-        vectors = []
-        for x in range(0,6):
-            file = "%s/captcha-%s.png"%(self.d, x)
-            im = Image.open(file)
-            vectors.append(buildvector(im))
-        return vectors
-
-    def solve(self):
-        word = ""
-        vectors = self.break_images()
-        for vector in vectors:
-            guesses = oracle.guesses(vector)
-            word += guesses[0][1]
-        return word
+if __name__ == "__main__":
+    print(solve("captchas/test/a.png", "Evaluate the Expression"))
+    print(solve("captchas/test/b.png", "Enter the First number"))
+    print(solve("captchas/test/c.png", "Evaluate the Expression"))
+    print(solve("captchas/test/test.gif", "Enter characters as displayed in image"))
 
