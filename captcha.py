@@ -25,7 +25,7 @@ def solve(filename, instructions):
     if captcha_type=="evaluate":
         string = recognize(filename)
         c.run(' '.join(list(string)))
-        return int(c.lcd)
+        return str(int(c.lcd))
     elif captcha_type=="pick":
         string = recognize(filename)
         return string[char_index]
@@ -40,10 +40,3 @@ def recognize(filename):
         data = file.read().replace('\n', '')
     # Delete fp.name + ".txt"
     return data.strip()
-
-if __name__ == "__main__":
-    print(solve("captchas/test/a.png", "Evaluate the Expression"))
-    print(solve("captchas/test/b.png", "Enter the First number"))
-    print(solve("captchas/test/c.png", "Evaluate the Expression"))
-    print(solve("captchas/test/test.gif", "Enter characters as displayed in image"))
-
