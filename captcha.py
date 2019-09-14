@@ -72,6 +72,6 @@ class Captcha:
             print(guesses[0][2])
         return word
 
-c = Captcha("captchas/test/9a8e11.gif")
+c = Captcha("captchas/test/bc4d28.gif")
 
 print(c.solve())
