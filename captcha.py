@@ -5,7 +5,6 @@ from calculator.simple import SimpleCalculator
 import subprocess
 from textcaptcha import TextCaptcha
 
-
 def parse_instructions(instructions):
     # Enter the First number
     if re.search('number', instructions, re.IGNORECASE):
@@ -23,11 +22,18 @@ def solve(filename, instructions):
     captcha_type, char_index = parse_instructions(instructions)
 
     if captcha_type=="evaluate":
+        print(filename)
         string = recognize(filename)
+        print(string)
         c.run(' '.join(list(string)))
-        return str(int(c.lcd))
+        answer = str(int(c.lcd))
+        with open('/tmp/guess.txt', 'w') as f:
+            f.write(answer)
+        return answer
     elif captcha_type=="pick":
         string = recognize(filename)
+        with open('/tmp/guess.txt', 'w') as f:
+            f.write(string)
         return string[char_index]
     else:
         c = TextCaptcha(filename)
@@ -35,8 +41,16 @@ def solve(filename, instructions):
 
 def recognize(filename):
     fp = tempfile.NamedTemporaryFile()
-    subprocess.run(["tesseract", filename, fp.name, "--psm", "7",  "-c", 'tessedit_char_whitelist=1234567890,+-='], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    command = [
+        "tesseract", filename, fp.name, "--psm", "11",  "-c", 'tessedit_char_whitelist=1234567890,+-='
+    ]
+    subprocess.run(
+        command,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL
+    )
     with open(fp.name + ".txt", 'r') as file:
         data = file.read().replace('\n', '')
-    # Delete fp.name + ".txt"
+    fp.close()
+    os.remove(fp.name + ".txt")
     return data.strip()
