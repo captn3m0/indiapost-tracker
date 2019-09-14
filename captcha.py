@@ -22,18 +22,18 @@ def solve(filename, instructions):
     captcha_type, char_index = parse_instructions(instructions)
 
     if captcha_type=="evaluate":
-        print(filename)
+        # print(filename)
         string = recognize(filename)
-        print(string)
+        # print(string)
         c.run(' '.join(list(string)))
         answer = str(int(c.lcd))
-        with open('/tmp/guess.txt', 'w') as f:
-            f.write(answer)
+        # with open('/tmp/guess.txt', 'w') as f:
+        #     f.write(answer)
         return answer
     elif captcha_type=="pick":
         string = recognize(filename)
-        with open('/tmp/guess.txt', 'w') as f:
-            f.write(string)
+        # with open('/tmp/guess.txt', 'w') as f:
+        #     f.write(string)
         return string[char_index]
     else:
         c = TextCaptcha(filename)

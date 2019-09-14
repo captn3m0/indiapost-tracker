@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 import os
 import sys
+import shutil
 
 v = VectorCompare()
 
@@ -66,5 +67,6 @@ class TextCaptcha:
         for vector in vectors:
             guesses = oracle.guesses(vector)
             word += guesses[0][1]
+        shutil.rmtree(self.d)
         return word
 

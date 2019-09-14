@@ -59,7 +59,7 @@ class Tracker:
 
         # Prep
         url = urljoin(TRACKING_URL, details['url'])
-        print(url)
+        # print(url)
         if "Math" in url:
             extension = ".png"
         else:
@@ -70,9 +70,14 @@ class Tracker:
         res = requests.get(url, headers=self.get_headers)
         captcha_file.write(res.content)
 
+        # Close from here, so remaining pipeline can open it
         captcha_file.close()
+
         # Solve
-        return captcha_solve(captcha_file.name, details["instructions"])
+        answer = captcha_solve(captcha_file.name, details["instructions"])
+        os.remove(captcha_file.name)
+
+        return answer
 
     def parse_html(self, content):
         details = {}
@@ -114,22 +119,22 @@ class Tracker:
     def track(self, id):
         data, captcha_details = self.get_form_data()
 
-        with open('/tmp/data.json', 'w') as f:
-            f.write(json.dumps(data))
+        # with open('/tmp/data.json', 'w') as f:
+        #     f.write(json.dumps(data))
 
-        with open('/tmp/captcha.json', 'w') as f:
-            f.write(json.dumps(captcha_details))
+        # with open('/tmp/captcha.json', 'w') as f:
+        #     f.write(json.dumps(captcha_details))
 
         data[CAPTCHA_FIELD] = self.solve_captcha(captcha_details)
         data[TRACKING_ID_FIELD] = id
 
-        with open('/tmp/data.json', 'w') as f:
-            f.write(json.dumps(data))
+        # with open('/tmp/data.json', 'w') as f:
+        #     f.write(json.dumps(data))
 
         response = requests.post(TRACKING_URL, data=data, headers=self.headers)
 
-        with open('/tmp/debug.html', 'w+b') as f:
-            f.write(response.content)
+        # with open('/tmp/debug.html', 'w+b') as f:
+        #     f.write(response.content)
 
         return self.parse_html(response.content)
 

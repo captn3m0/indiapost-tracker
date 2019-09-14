@@ -56,6 +56,6 @@ class InternationalTracker:
 
 
 if __name__ == '__main__':
-    tracker = Tracker()
+    tracker = InternationalTracker()
     print((json.dumps(tracker.track("EE123456789IN"),  sort_keys=True, indent=4,
                       separators=(',', ': '))))
