@@ -51,9 +51,6 @@ class Captcha:
         subprocess.run(["convert", "-fill", "white", "+opaque", "black", "-crop", "165x60+20", filename, fp.name])
         subprocess.run(["convert", "-crop", "6x1@", fp.name, self.d + "/captcha.png"])
         subprocess.run(["mogrify", "-trim", self.d + "/captcha-*.png"])
-        # im = Image.open("captcha.gif")
-        # im = im.convert("P")
-        # print im.histogram()
 
     def break_images(self):
         vectors = []
@@ -69,9 +66,5 @@ class Captcha:
         for vector in vectors:
             guesses = oracle.guesses(vector)
             word += guesses[0][1]
-            print(guesses[0][2])
         return word
 
-c = Captcha("captchas/test/bc4d28.gif")
-
-print(c.solve())
