@@ -2,6 +2,8 @@
 
 [![](https://images.microbadger.com/badges/image/captn3m0/indiapost-tracker.svg)](https://microbadger.com/images/captn3m0/indiapost-tracker) [![](https://images.microbadger.com/badges/version/captn3m0/indiapost-tracker:latest.svg)](https://microbadger.com/images/captn3m0/indiapost-tracker:latest) [![](https://images.microbadger.com/badges/commit/captn3m0/indiapost-tracker.svg)](https://microbadger.com/images/captn3m0/indiapost-tracker) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](http://www.wtfpl.net/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
+**NOTE**: The main API does not currently work. There is some WIP fixes at #17, but there is no functional API as of now. If you'd like to help, please [reach out](https://captnemo.in/contact).
+
 Simple no-captcha required API for tracking packages on the India Post website.
 
 - JSON API
