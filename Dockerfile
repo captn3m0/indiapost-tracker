@@ -13,6 +13,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 WORKDIR /app
 COPY requirements.txt /app
+RUN apk add --no-cache tesseract-ocr
 RUN pip install -r requirements.txt
 COPY . /app/
 
