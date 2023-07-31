@@ -1,6 +1,6 @@
 beautifulsoup4==4.12.2
 bottle==0.12.21
-python-dateutil==2.8.1
+python-dateutil==2.8.2
 requests==2.25.0
 six==1.15.0
 wheel==0.35.1
